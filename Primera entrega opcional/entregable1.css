@@ -1,0 +1,134 @@
+body {
+    background-color: rgba(30, 88, 117, 1);
+    margin-right: 25px;
+    font-family: Arial;
+}
+
+/* TITUTLOS*/
+
+#titulo {
+    background-color: #a8a6a8;
+    border-radius: 0px 95px 0px 95px;
+    border-radius: 0px 95px 0px 95px;
+    border-radius: 0px 95px 0px 95px;
+
+}
+
+h1 {
+    color: white;
+    font-size: 60pt;
+    font-style: normal;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+h3 {
+    color: whitesmoke;
+    font-size: 18pt;
+    font-weight: normal;
+    text-align: center;
+
+}
+
+
+h2 {
+    color: white;
+    border-bottom: solid white;
+    margin-right: 15px;
+    font-size: 25pt;
+    margin-left: 20px;
+}
+
+
+
+.resaltadoAzul {
+
+    font-weight: bold;
+    color: rgb(0, 255, 255);
+
+}
+
+ul,
+ol,
+p,
+table {
+
+    margin-left: 35px;
+    color: white;
+}
+
+
+blockquote {
+    margin-left: 50px;
+    color: white;
+    font-style: oblique;
+
+}
+
+
+
+a {
+    color: rgb(0, 255, 255);
+    font-style: underline;
+}
+
+
+/*TABLA FECHAS IMPORTANTES Y COMITE DE PROGRAMA*/
+
+.separacionTablas {
+    border-spacing: 50px 10px;
+}
+
+
+
+
+/*-----------------------------------------------------------------*/
+
+/*TABLA DE PROGRAMA*/
+
+#T2 {
+    border-collapse: collapse;
+}
+
+
+th {
+    border: 1px solid black;
+    background: brown;
+    color: white;
+}
+
+
+td.sesiones {
+    border: 1px solid black;
+    background-color: #00fff5;
+    color: black;
+}
+
+td.otros {
+    border: 1px solid black;
+    background-color: burlywood;
+}
+
+td.titulo {
+    border: 1px solid black;
+    background-color: brown;
+}
+
+td.horas {
+    border: 1px solid black;
+    background-color: #f2f24e;
+    color: black;
+}
+
+td.asamblea {
+    border: 1px solid black;
+    background-color: pink;
+}
+
+td.descansos {
+    border: 1px solid black;
+    background-color: rgba(217, 74, 217, 0.58);
+    text-align: center;
+
+}
