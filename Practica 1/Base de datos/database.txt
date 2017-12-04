@@ -1,0 +1,189 @@
+- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `mydb` ;
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8_spanish_ci ;
+SHOW WARNINGS;
+-- -----------------------------------------------------
+-- Schema practica1_aw
+-- -----------------------------------------------------
+SHOW WARNINGS;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `users` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `users` (
+  `idUser` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NOT NULL,
+  `contraseña` VARCHAR(45) NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido` VARCHAR(45) NOT NULL,
+  `genero` TINYINT(1) NOT NULL,
+  `score` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`idUser`, `email`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_spanish_ci
+COMMENT = 'La imagen de perfil tendrá una por defecto, registrada en la base de datos con anterioridad.';
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `friends`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `friends` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `friends` (
+  `idFriend` INT NOT NULL,
+  `user` INT NOT NULL,
+  `petition` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`idFriend`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_spanish_ci;
+
+SHOW WARNINGS;
+CREATE INDEX `user` ON `friends` (`user` ASC);
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table ` questions`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS ` questions` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS ` questions` (
+  `idQuestion` INT NOT NULL AUTO_INCREMENT,
+  `user` INT NOT NULL,
+  `text_que` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`idQuestion`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = ucs2
+COLLATE = ucs2_spanish_ci;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `answer`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `answer` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `answer` (
+  `idAnswer` INT NOT NULL AUTO_INCREMENT,
+  `question` INT NOT NULL,
+  `text_req` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idAnswer`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_spanish_ci;
+
+SHOW WARNINGS;
+CREATE INDEX `question` ON `answer` (`question` ASC);
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `self_answer`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `self_answer` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `self_answer` (
+  `question` INT NOT NULL COMMENT '	',
+  `user` INT NOT NULL,
+  `answer` INT NOT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_spanish_ci;
+
+SHOW WARNINGS;
+CREATE INDEX `question` ON `self_answer` (`question` ASC);
+
+SHOW WARNINGS;
+CREATE INDEX `user` ON `self_answer` (`user` ASC);
+
+SHOW WARNINGS;
+CREATE INDEX `answer` ON `self_answer` (`answer` ASC);
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `friend_answer`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `friend_answer` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `friend_answer` (
+  `question` INT NOT NULL,
+  `user` INT NOT NULL,
+  `friend` INT NOT NULL,
+  `answer` INT NOT NULL)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+CREATE INDEX `question_idx` ON `friend_answer` (`question` ASC);
+
+SHOW WARNINGS;
+CREATE INDEX `user_idx` ON `friend_answer` (`user` ASC);
+
+SHOW WARNINGS;
+CREATE INDEX `friend_idx` ON `friend_answer` (`friend` ASC);
+
+SHOW WARNINGS;
+CREATE INDEX `answer_idx` ON `friend_answer` (`answer` ASC);
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `images`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `images` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `images` (
+  `idimages` INT NOT NULL AUTO_INCREMENT,
+  `text` BLOB NOT NULL,
+  PRIMARY KEY (`idimages`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `images_user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `images_user` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `images_user` (
+  `img` INT NOT NULL,
+  `user` INT NOT NULL)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+CREATE INDEX `user_idx` ON `images_user` (`user` ASC);
+
+SHOW WARNINGS;
+CREATE INDEX `idimg_idx` ON `images_user` (`img` ASC);
+
+SHOW WARNINGS;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
