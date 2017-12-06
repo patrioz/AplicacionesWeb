@@ -334,13 +334,13 @@ LOGIN FORM*/
 
 #email {
 
-    background: #2b2b2b url(Imagenes/user.png) no-repeat;
+    background: #2b2b2b url(static_img/user.png) no-repeat;
 }
 
 
 #password {
 
-    background: #2b2b2b url(Imagenes/password.png) no-repeat;
+    background: #2b2b2b url(static_img/password.png) no-repeat;
 }
 
 
