@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+    
+    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Mis Amigos - Facebluff</title>
+    
+    <link rel="stylesheet" href="css/Facebluff.css">
+    
+</head>
+
+<body>
+    
+    <header>
+        
+        <h1 class = "logo">F A C E<span class = "logoB green"> B </span>L U F F</h1>
+    </header>
+    
+    <nav class = "main_navigation grafito">
+        <a class = "main_nav_link" href="/profile">Perfil</a>
+        <a class = "main_nav_link" href="/friends">Amigos</a>
+        <a class = "main_nav_link" href="">Preguntas</a>
+        <a class = "main_nav_link" href="/logout">Cerrar Sesión</a>
+    </nav>
+  
+  
+  
+    <p class = "title_pag grafito">Solicitudes de amistad</p>
+    
+    <% if(requestFriends !== null){ %>
+        <form>
+            <ul class = "friend_ul">
+                <div class = "friend_request_div">
+                    <% requestFriends.forEach(reFriend => { %>
+                        <li class = "friend_list">
+                            <img class = "imgAmigo" src = "static_img/noPerfil.png">
+                            <p><%= reFriend.name %> <%= reFriend.surname %></p>
+                        </li> 
+                        <li class = "friend_list">
+                            <input class = "friend_button" type = "submit" value="Aceptar">
+                            <input class = "friend_button" type = "submit" value="Rechazar">
+                        </li>
+                    <% }) %>
+                </div>
+            </ul>
+        </form>
+    <% } %>
+    
+
+    <p class = "title_pag grafito">Búsqueda de amigos</p>
+    
+    <form id = "search_form" method = "POST" action = "/search">
+        <label id = "labelSearch" for="search">Buscar por nombre:</label>    
+        <input type="text" name="nombre_campo" placeholder ="Introduce un nombre" id = "search">
+        <input action = "/search" class = "friend_button" type = "submit" value="Buscar">
+    </form>
+   
+   
+   
+   <p class = "title_pag grafito">Mis amigos</p>
+      
+    <% if(friends !== null){ %>
+        <ul class = "friend_ul">
+            
+        <% friends.forEach(friend => { %>
+                <li class = "friend_list">
+                    <img class = "imgAmigo" src = "static_img/noPerfil.png">
+                    <p><%= reFriend.name %> <%= reFriend.surname %></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+   
+</body>
+</html>
+
+
+
+
+
+
+
+

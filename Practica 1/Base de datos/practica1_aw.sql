@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS `practica1_aw`.`users` (
   `idUser` INT(11) NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
-  `fecha` DATE NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `surname` VARCHAR(45) NOT NULL,
+  `date` DATE NOT NULL,
   `gender` TINYINT(4) NOT NULL,
   `score` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idUser`),
@@ -43,7 +45,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `practica1_aw`.`friendship` (
   `user1` INT(11) NOT NULL,
   `user2` INT(11) NOT NULL,
-  `request` TINYINT(4) NOT NULL,
+  `request` TINYINT(4) NOT NULL DEFAULT '1',
   CONSTRAINT `fk_user1`
 	FOREIGN KEY (`user1`) 
 	REFERENCES `practica1_aw`.`users` (`idUser`)

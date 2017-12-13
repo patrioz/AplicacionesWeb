@@ -15,6 +15,7 @@ const mySql_session = require("express-mysql-session");
 //****************************************************
 const config = require("./config");
 const daoUsers = require("./dao_users");
+const daoFriends = require("./dao_friends");
 //*****************************************************
 const app = express();
 //_______________________________________________________________________________________
@@ -50,7 +51,7 @@ const middlewareSession = session({
 
 function userMail (request, response, next){
     
-    if(request.session.currentUser)
+    if(request.session.emailUser)
         next();
     else
         response.redirect("/login.html");
@@ -63,7 +64,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 
-//________________________________ CONEXION _________________________________
+//__________________________________ CONEXION ___________________________________
 
 let pool = mysql.createPool({
     database: config.mysqlConfig.database,
@@ -72,10 +73,15 @@ let pool = mysql.createPool({
     password: config.mysqlConfig.password
 });
 let daoU = new daoUsers.DAOUsers(pool);
+let daoF = new daoFriends.DAOFriends(pool);
 //______________________________________________________________________________
 
+
+
+//____________________________________ APARTADO 1 ________________________________
+
 /**
- * Pagina de logueo.
+ * Muestra la pagina de logueo
  * Mensaje de error NULO.
  */
 app.get("/login.html", (request, response) => {
@@ -102,7 +108,7 @@ app.get("/checkIn.html", (request, response) => {
  */
 app.post("/check_in", (request, response) =>{
 
-    daoU.searchUser(request.body.email, (err, encontrado) =>{
+    daoU.findByEmail(request.body.email, (err, encontrado) =>{
         
         if(err){
             response.status(400);
@@ -110,19 +116,11 @@ app.post("/check_in", (request, response) =>{
         }
         else{
             response.status(200);
-            if(encontrado)
+            if(encontrado !== null)
                 response.render("check_in", {errMsg:"Este email ya está registrado"});
             else{
 
-                let user = {};
-                user.email = request.body.email;
-                user.password = request.body.password;
-                user.name = request.body.name;
-                user.surname = request.body.surname;
-                user.gender = request.body.gender;
-                user.date = request.body.date;
-
-                daoU.createUser(user, (err, callback) =>{
+                daoU.createUser(request.body, (err, result) =>{
                     
                     if(err){
                         response.status(400);
@@ -130,8 +128,9 @@ app.post("/check_in", (request, response) =>{
                     }
                     else{
                         response.status(200);
-                        if(callback !== null){
-                            request.session.currentUser = request.body.email;
+                        if(result !== null){
+                            request.session.emailUser = request.body.email;
+                            request.session.idUser = result;
                             response.redirect("/profile");
                         }
                         else
@@ -159,11 +158,11 @@ app.post("/connect", (request, response) => {
         }
         else{
             response.status(200);
-            if(callback){
-                request.session.currentUser = request.body.email;
+            if(callback !== null){
+                request.session.emailUser = request.body.email;
+                request.session.idUser = callback;
                 response.redirect("/profile");
             }
-
             else
                 response.render("login", {errMsg:"Correo y/o contraseña incorrecta"});
         }//else
@@ -172,7 +171,7 @@ app.post("/connect", (request, response) => {
 
 
 /**
- * Elimina los datos almacenados en la sesion.
+ * Elimina los datos almacenados en la sesion y cierra la sesion del usuario actual.
  * Redirege a la pagina de logueo.
  */
 app.get("/logout", (request, response) => {
@@ -189,7 +188,7 @@ app.get("/logout", (request, response) => {
  */
 app.get("/profile", userMail, (request, response) =>{
 
-    daoU.getUser(request.session.currentUser, (err, user_fields) =>{
+    daoU.readUser(request.session.idUser, (err, user_fields) =>{
 
         if(err){
             response.status(400);
@@ -197,11 +196,12 @@ app.get("/profile", userMail, (request, response) =>{
         }
         else{
             response.status(200);
-            app.locals.scoreUser = user_fields[0].score;
+            app.locals.scoreUser = user_fields.score;
             response.render("profile", {user:user_fields});
         }
     });
 });
+
 
 /**
  * Muestra la vista para modificar el perfil
@@ -209,7 +209,7 @@ app.get("/profile", userMail, (request, response) =>{
  */
 app.get("/modifyProfile.html", userMail, (request, response) =>{
 
-    daoU.getUser(request.session.currentUser, (err, user_fields) =>{
+    daoU.readUser(request.session.idUser, (err, user_fields) =>{
 
         if(err){
             response.status(400);
@@ -217,7 +217,7 @@ app.get("/modifyProfile.html", userMail, (request, response) =>{
         }
         else{
             response.status(200);
-            response.render("ModifyProfile", {user:user_fields, errMsg:null});
+            response.render("modifyProfile", {user:user_fields, errMsg:null});
         }
     });
 
@@ -225,13 +225,8 @@ app.get("/modifyProfile.html", userMail, (request, response) =>{
 
 app.post("/modifyProfile", userMail, (request, response) =>{
 
-    let user = {};
-    user.email = request.session.currentUser;
-    user.password = request.body.password;
-    user.name = request.body.name;
-    user.surname = request.body.surname;
-    user.gender = request.body.gender;
-    user.date = request.body.date;
+    let user = request.body;
+    user.email = request.session.emailUser;
 
     daoU.modifyUser(user, (err, result) =>{
 
@@ -243,14 +238,91 @@ app.post("/modifyProfile", userMail, (request, response) =>{
             response.status(200);
             if(result)
                 response.redirect("/profile");
-            else
-                response.render("check_in", {errMsg:"Error al modificar el usuario"});
+            else{
+
+                daoU.readUser(request.session.idUser, (err, user_fields) =>{
+            
+                    if(err){
+                        response.status(400);
+                        response.end;
+                    }
+                    else{
+                        response.status(200);
+                        response.render("modifyProfile", {user:user_fields, errMsg:"Error al modificar el usuario"});
+                    }
+                });
+            }//else
         }//elss
     });
 });
 
 //--------------------------------------
 
+
+//Muestra la pagian de los amigos.
+//Primero buscamos los usuarios que nos han solicitado amistad.
+//Segundo mostramos la lista de amigos del usuario actual.
+app.get("/friends", (request, response) =>{
+
+    daoF.readFriendship(request.session.idUser, (err, list) =>{
+
+        if(err){
+            response.status(400);
+            response.end;
+        }
+        else{
+            response.status(200);
+            if(list !== null){
+
+                let requestFriends = [];
+                let friends = [];
+
+                for(let i = 0; i < list.length; i++){
+
+                    daoU.readUser(list[i].user2, (err, user) =>{
+                        
+                        if(err){
+                            response.status(400);
+                            response.end;
+                        }
+                        else{
+                            response.status(200);
+                            if(list[i].request === 0)
+                                friends.push(user);
+                            else
+                                requestFriends.push(user);                                  //--> se pierden los datos de las listas al
+                                                                                            // de la función del DAO.
+                        }//else
+                    });
+                }//for
+                response.render("friends", {requestFriends:requestFriends, friends:friends});
+            }//if
+            else{
+                response.render("friends", {requestFriends:null, friends:null});
+            }
+        }//else
+    });
+});
+
+
+app.post("/search", (request, response) =>{
+
+    daoU.findByName(request.body.nombre_campo, (err, list) => {
+        
+        if(err){
+            response.status(400);
+            response.end;
+        }
+        else{
+            response.status(200);
+            console.log(list);
+            if(list !== null)
+                response.render("searchFriends", {listSearch:list, infMsg:"Resultados de búsqueda: '" + request.body.nombre_campo + "'"});
+            else
+                response.render("searchFriends", {listSearch:null, infMsg:"No se han encontrado resultados con: '" + request.body.nombre_campo + "'"});
+        }//else
+    });
+});
 
 /******************************************************************************************** */
 /******************************************************************************************** */
