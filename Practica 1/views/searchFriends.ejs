@@ -3,22 +3,16 @@
 
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Búsqueda de amigos</title>
-
     <link rel="stylesheet" href="css/Facebluff.css">
 </head>
 
 <body>
 
-
     <header>
-
         <h1 class="logo">F A C E<span class="logoB green"> B </span>L U F F</h1>
-
     </header>
 
     <nav class = "main_navigation grafito">
@@ -32,29 +26,27 @@
         </span>
     </nav>
 
-
     <p class="title_pag grafito"><%= infMsg %></p>
 
     <% if(listSearch !== null){ %>
-        <form>
+        <form method = "GET" action = "/request_friendship">
             <ul class="friend_ul">
                 <% listSearch.forEach(search => { %>
-                <div class="friend_request_div">
-                    <li class="friend_list">
-                        <img class="imgAmigo" src="img/noPerfil.png">
-                        <p><%= search.name %> <%= search.surname %></p>
-                    </li>
-
-                    <li class="friend_list">
-                        <form method = "GET" action = "/request friendship">
-                            <input action = "/request friendship" class="search_friend_button" type="submit" value="Solicitar amistad">
-                        </form>
-                    </li>
-                </div>
+                    <div class="friend_request_div">
+                        <li class="friend_list">
+                            <img class="imgAmigo" src="img/noPerfil.png">
+                            <input name = "idUser2" type = "hidden" value = "<%= search.idUser %>">
+                            <p><%= search.name %> <%= search.surname %></p>
+                        </li>
+                        <li class="friend_list">
+                            <input action = "/request_friendship" class="search_friend_button" type="submit" value="Solicitar amistad">
+                        </li>
+                    </div>
                 <% }) %>
             </ul>
         </form>
     <% } %>
 
 </body>
+
 </html>

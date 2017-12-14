@@ -75,7 +75,7 @@ class DAOUsers {
      * 
      */
     createUser(user, callback){
-
+        console.log(user);
         this.pool.getConnection((err, connection) =>{
             
             if(err){
@@ -253,23 +253,23 @@ class DAOUsers {
      * @param {function} callback Función que recibirá el objeto error y el resultado
      * 
      */
-    findByName(name, callback){
-
+    findByName(name, id, callback){
+        
         this.pool.getConnection((err, connection) =>{
 
             if(err){                         
                 callback(err); return;
             }
 
-            connection.query("SELECT * FROM users WHERE name LIKE '%?%' ORDER BY name",           //no se hacer busquedas parciales.
-            [name],
+            connection.query("SELECT users.idUser, users.name, users.surname FROM users " +
+                             "WHERE name LIKE ? OR surname LIKE ? AND users.idUser != ?",
+            ["%" + name + "%", "%" + name + "%", id],
             (err, users) =>{
 
                 if(err){
                     callback(err);return;
                 }
                 connection.release();
-
                 if(users.length === 0)
                     callback(null, null);
                 else
