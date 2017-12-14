@@ -20,7 +20,7 @@ class DAOFriends {
      * @param {object} friendship datos de amistad ainsertar.
      * @param {function} callback Función que recibirá el objeto error y el resultado
      */
-    createFrienship(frendship, callback){
+    createFrienship(user1, user2, callback){
 
         this.pool.getConnection((err,connection) => {
             
@@ -29,7 +29,7 @@ class DAOFriends {
             }
 
             connection.query("INSERT INTO friendship (user1, user2) VALUES (?,?)",
-            [friendship.user1, friendship.user2],
+            [user1, user2],
             (err, result) =>{
 
                 if (err) { 
@@ -111,8 +111,9 @@ class DAOFriends {
     //***********************************************************************************************************************
 
     /**
-     * Devuelve una lista con las amistades de un usuario.
-     * 
+     * Devuelve una lista con las amistades de un usuario
+     * (--> nombre, apellido y estado de la amistad)
+     *  
      * @param {object} id id del usuario
      * @param {boolean} request estado de la peticion
      * @param {function} callback Función que recibirá el objeto error y el resultado
@@ -125,7 +126,10 @@ class DAOFriends {
                 callback(err);return;
             }
 
-            connection.query("SELECT * FROM friendship WHERE user1 = ?",
+            connection.query("SELECT users.idUser, users.name, users.surname, friendship.request " +
+                             "FROM users LEFT JOIN friendship " +
+                                "ON friendship.user2 = users.idUser " + 
+                             "WHERE friendship.user1 = ?;",
             [id],
             (err, listFriends) =>{
 

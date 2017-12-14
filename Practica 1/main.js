@@ -49,6 +49,14 @@ const middlewareSession = session({
     store: sessionStore
 });
 
+function userId (request, response, next){
+    
+    if(request.session.idUser)
+        next();
+    else
+        response.redirect("/login.html");
+}//userMail
+
 function userMail (request, response, next){
     
     if(request.session.emailUser)
@@ -112,7 +120,7 @@ app.post("/check_in", (request, response) =>{
         
         if(err){
             response.status(400);
-            response.end;
+            response.end();
         }
         else{
             response.status(200);
@@ -121,10 +129,10 @@ app.post("/check_in", (request, response) =>{
             else{
 
                 daoU.createUser(request.body, (err, result) =>{
-                    
+                    console.log(result);
                     if(err){
                         response.status(400);
-                        response.end;
+                        response.end();
                     }
                     else{
                         response.status(200);
@@ -154,7 +162,7 @@ app.post("/connect", (request, response) => {
 
         if(err){
             response.status(400);
-            response.end;
+            response.end();
         }
         else{
             response.status(200);
@@ -186,13 +194,13 @@ app.get("/logout", (request, response) => {
  * Guarda los datos de usuario en local para poder ser usados por la vista.
  * Redirige a la vista de perfil.
  */
-app.get("/profile", userMail, (request, response) =>{
+app.get("/profile", userId, (request, response) =>{
 
     daoU.readUser(request.session.idUser, (err, user_fields) =>{
 
         if(err){
             response.status(400);
-            response.end;
+            response.end();
         }
         else{
             response.status(200);
@@ -207,13 +215,13 @@ app.get("/profile", userMail, (request, response) =>{
  * Muestra la vista para modificar el perfil
  * Obtiene los datos de usuario actual y los pasa al formualrio.
  */
-app.get("/modifyProfile.html", userMail, (request, response) =>{
+app.get("/modifyProfile.html", userId, (request, response) =>{
 
     daoU.readUser(request.session.idUser, (err, user_fields) =>{
 
         if(err){
             response.status(400);
-            response.end;
+            response.end();
         }
         else{
             response.status(200);
@@ -223,7 +231,7 @@ app.get("/modifyProfile.html", userMail, (request, response) =>{
 
 });
 
-app.post("/modifyProfile", userMail, (request, response) =>{
+app.post("/modifyProfile", userMail, userId, (request, response) =>{
 
     let user = request.body;
     user.email = request.session.emailUser;
@@ -232,7 +240,7 @@ app.post("/modifyProfile", userMail, (request, response) =>{
 
         if(err){
             response.status(400);
-            response.end;
+            response.end();
         }
         else{
             response.status(200);
@@ -244,7 +252,7 @@ app.post("/modifyProfile", userMail, (request, response) =>{
             
                     if(err){
                         response.status(400);
-                        response.end;
+                        response.end();
                     }
                     else{
                         response.status(200);
@@ -260,68 +268,118 @@ app.post("/modifyProfile", userMail, (request, response) =>{
 
 
 //Muestra la pagian de los amigos.
-//Primero buscamos los usuarios que nos han solicitado amistad.
-//Segundo mostramos la lista de amigos del usuario actual.
-app.get("/friends", (request, response) =>{
+//Tanto los que están pendientes de aceptacion
+//Como los que estan en nuestra lista de amigos.
+app.get("/friends", userId, (request, response) =>{
 
-    daoF.readFriendship(request.session.idUser, (err, list) =>{
+    daoF.readFriendship(request.session.idUser, (err, list) => {
 
         if(err){
             response.status(400);
-            response.end;
-        }
+            response.end();
+        }//if
         else{
             response.status(200);
+            let requestFriends = [];
+            let friends = [];
+
             if(list !== null){
-
-                let requestFriends = [];
-                let friends = [];
-
-                for(let i = 0; i < list.length; i++){
-
-                    daoU.readUser(list[i].user2, (err, user) =>{
-                        
-                        if(err){
-                            response.status(400);
-                            response.end;
-                        }
-                        else{
-                            response.status(200);
-                            if(list[i].request === 0)
-                                friends.push(user);
-                            else
-                                requestFriends.push(user);                                  //--> se pierden los datos de las listas al
-                                                                                            // de la función del DAO.
-                        }//else
-                    });
-                }//for
-                response.render("friends", {requestFriends:requestFriends, friends:friends});
+                list.forEach(friend =>{
+                    if(friend.request === 0)
+                        friends.push(friend);
+                    else
+                        requestFriends.push(friend);
+                });//foreach
+                response.render("friends", {friends:friends, requestFriends:requestFriends});
             }//if
             else{
-                response.render("friends", {requestFriends:null, friends:null});
-            }
+                response.render("friends", {friends:null, requestFirends:null});
+            }//else
         }//else
     });
 });
 
+//Muestra la inforamcion del perfil del usuario que hemos seleccionado.
+app.get("/profileFriend/:id", userId, (request, response) => {
 
-app.post("/search", (request, response) =>{
-
-    daoU.findByName(request.body.nombre_campo, (err, list) => {
+    daoU.readUser(request.params.id, (err, friend_fields) =>{
         
         if(err){
             response.status(400);
-            response.end;
+            response.end();
         }
         else{
             response.status(200);
-            console.log(list);
-            if(list !== null)
-                response.render("searchFriends", {listSearch:list, infMsg:"Resultados de búsqueda: '" + request.body.nombre_campo + "'"});
-            else
-                response.render("searchFriends", {listSearch:null, infMsg:"No se han encontrado resultados con: '" + request.body.nombre_campo + "'"});
-        }//else
+            response.render("profileFriend", {user:friend_fields});
+        }
     });
+});
+
+//Muestra los usuario los cuales coincidan con la cadena que hemos introducido
+//con la posibilidad de enviar una solicitud de amistad.
+app.post("/search", userId, (request, response) =>{
+
+    if(request.body.nombre_campo !== ""){
+        daoU.findByName(request.body.nombre_campo, request.session.idUser, (err, list) => {
+            
+            if(err){
+                response.status(400);
+                response.end();
+            }
+            else{
+                response.status(200);
+                
+                if(list !== null){
+                    console.log(list);
+                    response.render("searchFriends", {infMsg: "Resultado de la búsqueda con: '" + request.body.nombre_campo + "'", listSearch:list});
+                }//if
+                else{
+                    response.render("searchFriends", {infMsg: "No se han econtrado coincidencias con: '" + request.body.nombre_campo + "'", listSearch:null});
+                }//else
+            }//else
+        })
+    }//if
+    else
+        response.render("searchFriends", {infMsg: "Introduzca un valor en la barra buscadora", listSearch:null});
+        
+/*     let listaAmigos = [];
+
+    //Obtiene una lista con los amigos del usario actual.
+    daoF.readFriendship(request.session.idUser, (err, list) => {
+        
+        if(err){
+            response.status(400);
+            response.end();
+        }//if
+        else{
+            response.status(200);
+            listaAmigos = list;
+        }
+    });
+
+    let listaNombre = [];
+
+    //Encuentra los nombre que coinciden con la cadena introducida.
+    daoU.findByName(request.body.nombre_campo, request.session.idUser, (err, list) => {
+        
+        if(err){
+            response.status(400);
+            response.end();
+        }
+        else{
+            response.status(200);
+            listaNombre = list;
+        }
+    });
+
+    //Hay que encontrar la forma de obtener una lista solo con los usuarios que no sean amigos del USUARIO ACTUAL. */
+});
+
+
+//Realiza una peticion de amistad a otro usuario.
+app.post("/request_friendship", userId, (request, response) => {
+
+
 });
 
 /******************************************************************************************** */

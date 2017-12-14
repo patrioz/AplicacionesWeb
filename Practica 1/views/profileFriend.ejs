@@ -5,11 +5,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil - <%=user.name%> <%=user.surname%></title>
-  <link rel="stylesheet" href="css/Facebluff.css">
+  <link rel="stylesheet" href = "css/Facebluff.css">
 </head>
 
 <body>
-    
+
     <header>
         <h1 class = "logo">F A C E<span class = "logoB green"> B </span>L U F F</h1>
     </header>
@@ -39,15 +39,9 @@
             <%}else{%>
                 <li class = "perfil_list">Mujer</li>
             <%}%>
-            <li class = "perfil_list"><%= scoreUser %> puntos</li>
+            <li class = "perfil_list"><%= user.score %> puntos</li>
         </ul>
     </div>
-    
-    <form method = "GET" action = "/modifyProfile.html">
-        <div CLASS = "button_div">
-            <input class = "small_button scale" action = "/modifyProfile.html" type = submit value = "Modificar Perfil">
-        </div>
-    </form>
 
 </body>
 

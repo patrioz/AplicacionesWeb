@@ -540,6 +540,15 @@ PERFIL PAGE*/
     padding-top: 20px;
 }
 
+.name_friend {
+
+    margin-top: 20px;
+
+    text-decoration: none;
+    text-align: center;
+    font-size: 14pt;
+}
+
 
 /*FRIENDSHIP REQUEST FORM*/
 
@@ -734,5 +743,7 @@ ANSWER RADIO*/
     width: 500px;
 }
 
-
+.prueba{
+    color: red;
+}
 

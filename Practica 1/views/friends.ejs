@@ -24,27 +24,29 @@
         <a class = "main_nav_link" href="/friends">Amigos</a>
         <a class = "main_nav_link" href="">Preguntas</a>
         <a class = "main_nav_link" href="/logout">Cerrar Sesión</a>
+        <span class = "score_nav">
+            <img class = "img_nav" src = "img/noPerfil.png">
+            <p class = "txt_nav"><%= scoreUser %> puntos</p>
+        </span>
     </nav>
-  
-  
-  
+
     <p class = "title_pag grafito">Solicitudes de amistad</p>
     
     <% if(requestFriends !== null){ %>
-        <form>
+        <form method = "POST" action = "/accep_friendship">
             <ul class = "friend_ul">
-                <div class = "friend_request_div">
-                    <% requestFriends.forEach(reFriend => { %>
+                <% requestFriends.forEach(reFriend => { %>
+                    <div class = "friend_request_div">
                         <li class = "friend_list">
-                            <img class = "imgAmigo" src = "static_img/noPerfil.png">
-                            <p><%= reFriend.name %> <%= reFriend.surname %></p>
+                            <img class = "imgAmigo" src = "img/noPerfil.png">
+                            <a href = "/profileFriend/<%= reFriend.idUser %>"><%= reFriend.name %> <%= reFriend.surname %></a>
                         </li> 
                         <li class = "friend_list">
                             <input class = "friend_button" type = "submit" value="Aceptar">
                             <input class = "friend_button" type = "submit" value="Rechazar">
-                        </li>
-                    <% }) %>
-                </div>
+                        </li>    
+                    </div>
+                <% }) %>
             </ul>
         </form>
     <% } %>
@@ -64,11 +66,10 @@
       
     <% if(friends !== null){ %>
         <ul class = "friend_ul">
-            
-        <% friends.forEach(friend => { %>
+            <% friends.forEach(friend => { %>
                 <li class = "friend_list">
-                    <img class = "imgAmigo" src = "static_img/noPerfil.png">
-                    <p><%= reFriend.name %> <%= reFriend.surname %></p>
+                    <img class = "imgAmigo" src = "img/noPerfil.png">
+                    <a class = "name_friend" href = "/profileFriend/<%= friend.idUser %>"><%= friend.name %> <%= friend.surname %></a>
                 </li>
             <% }) %>
         </ul>
@@ -76,11 +77,3 @@
    
 </body>
 </html>
-
-
-
-
-
-
-
-
