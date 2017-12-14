@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil - <%=user.name%> <%=user.surname%></title>
+  <link rel="stylesheet" href="css/Facebluff.css">
+</head>
+
+<body>
+    
+    <header>
+        <h1 class = "logo">F A C E<span class = "logoB green"> B </span>L U F F</h1>
+    </header>
+    
+    <nav class = "main_navigation grafito">
+        <a class = "main_nav_link" href="/profile">Perfil</a>
+        <a class = "main_nav_link" href="/friends">Amigos</a>
+        <a class = "main_nav_link" href="">Preguntas</a>
+        <a class = "main_nav_link" href="/logout">Cerrar Sesión</a>
+        <span class = "score_nav">
+            <img class = "img_nav" src = "img/noPerfil.png">
+            <p class = "txt_nav"><%= scoreUser %> puntos</p>
+        </span>
+    </nav>
+  
+    <p class = "title_pag grafito">Perfil</p>
+
+    <div id = "user">
+        <img class = "perfilImg" src = "img/noPerfil.png">
+
+        <ul class = "nostyle_ul" id = "perfil_ul">
+            <li class = "perfil_list" id = "nombreUsuario"><%= user.name %> <%= user.surname %></li>
+            <li class = "perfil_list"><%=user.date%></li>
+
+            <%if(user.gender === 0){%>
+                <li class = "perfil_list">Hombre</li>
+            <%}else{%>
+                <li class = "perfil_list">Mujer</li>
+            <%}%>
+            <li class = "perfil_list"><%= scoreUser %> puntos</li>
+        </ul>
+    </div>
+    
+    <form method = "GET" action = "/modifyProfile.html">
+        <div CLASS = "button_div">
+            <input class = "small_button scale" action = "/modifyProfile.html" type = submit value = "Modificar Perfil">
+        </div>
+    </form>
+
+</body>
+
+</html>
