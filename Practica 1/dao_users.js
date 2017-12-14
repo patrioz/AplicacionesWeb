@@ -119,8 +119,13 @@ class DAOUsers {
                 callback(err); return;
             }
 
+<<<<<<< HEAD
+            connection.query("INSERT INTO users (email, password, date, gender) VALUES (?, ?, ?, ?)",
+            [user.email, user.password, user.date, user.gender],
+=======
             connection.query("UPDATE users SET password = ?, name = ?, surname = ?, date = ?, gender = ? WHERE email = ?",
             [user.password, user.name, user.surname, user.date, user.gender, user.email],
+>>>>>>> 74b1645b190248524998d8d77db0f70fd732da10
             (err, result) =>{
 
                 if(err){

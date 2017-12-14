@@ -264,6 +264,8 @@ app.post("/modifyProfile", userMail, userId, (request, response) =>{
     });
 });
 
+//--------------------------------------
+
 
 //Muestra la pagian de los amigos.
 //Tanto los que están pendientes de aceptacion
