@@ -58,6 +58,89 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
+-- -----------------------------------------------------
+-- Table `practica1_aw`.`questions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `practica1_aw`.`questions` (
+  `idQuestion` INT(11) NOT NULL AUTO_INCREMENT,
+  `questionText` VARCHAR(45) NOT NULL,
+  `cont` INT(11) NOT NULL, -- Para el apartado 3
+  PRIMARY KEY(`idQuestion`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `practica1_aw`.`answers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `practica1_aw`.`answers` (
+  `idAnswer` INT(11) NOT NULL AUTO_INCREMENT,
+  `idQuestion` INT(11) NOT NULL,
+  `answerText` VARCHAR(45) NOT NULL,
+  CONSTRAINT `fk_idQuestion`
+	FOREIGN KEY (`idQuestion`) 
+	REFERENCES `practica1_aw`.`questions` (`idQuestion`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  PRIMARY KEY(`idAnswer`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `practica1_aw`.`answers_self`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `practica1_aw`.`answers_self` (
+  `idAnswerSelf` INT(11) NOT NULL AUTO_INCREMENT,
+  `question` INT(11) NOT NULL,
+  `answer` INT(11) NOT NULL,
+  `user` INT(11) NOT NULL,
+  CONSTRAINT `fk_question`
+	FOREIGN KEY (`question`) 
+	REFERENCES `practica1_aw`.`questions` (`idQuestion`)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_answer`
+	FOREIGN KEY (`answer`) 
+	REFERENCES `practica1_aw`.`answers` (`idAnswer`)
+	ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user`
+	FOREIGN KEY (`user`) 
+	REFERENCES `practica1_aw`.`users` (`idUser`)
+	ON DELETE CASCADE ON UPDATE CASCADE,
+  PRIMARY KEY(`idAnswerSelf`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `practica1_aw`.`answers_friends`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `practica1_aw`.`answers_friends` (
+  `idAnswerFriends` INT(11) NOT NULL AUTO_INCREMENT,
+  `question` INT(11) NOT NULL,
+  `answer` INT(11) NOT NULL,
+  `userMe` INT(11) NOT NULL,
+  `userFriend` INT(11) NOT NULL,
+  CONSTRAINT `fk_question`
+	FOREIGN KEY (`question`) 
+	 REFERENCES `practica1_aw`.`questions` (`idQuestion`)
+   ON DELETE CASCADE ON UPDATE CASCADE,
+  -- CONSTRAINT `fk_answer`
+	-- FOREIGN KEY (`answer`) 
+	-- REFERENCES `practica1_aw`.`answers` (`idAnswer`)
+	-- ON DELETE CASCADE ON UPDATE CASCADE,
+  -- CONSTRAINT `fk_userMe`
+	-- FOREIGN KEY (`userMe`) 
+	-- REFERENCES `practica1_aw`.`users` (`idUser`)
+	-- ON DELETE CASCADE ON UPDATE CASCADE,
+  -- CONSTRAINT `fk_userFriend`
+	-- FOREIGN KEY (`userFriend`)
+	-- REFERENCES `practica1_aw`.`users` (`idUser`)
+	-- ON DELETE CASCADE ON UPDATE CASCADE,
+PRIMARY KEY(`idAnswerFriends`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
