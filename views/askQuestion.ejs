@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Contestar pregunta</title>
+    
+    <link rel="stylesheet" href="/css/Facebluff.css">
+</head>
+
+<body>
+    
+    <%- include("header_user")%>
+    <%- include("navigation")%>
+    
+    
+    <p class = "grafito title_pag"><%= question.questionText %></p>
+
+    <%- include("flash")%>
+
+    <div id = "ask_div">
+
+        <% if(!show) {%>
+            <div>
+                <p class = "text_ask">No has contestado a esta pregunta:</p>
+                <a href = "/answerQuestion.html/<%= question.idQuestion %>" class = "link_button">Constestar Pregunta</a>
+            </div>
+        <% } %>
+
+        <ul class = "nostyle_ul">
+
+            <% list_friends.forEach(friend => { %>
+
+             <div class = "friend_request_div">
+
+                    <li class = "friend_list">
+                        <img class = "imgAmigo" src = "/imagen/<%= friend.idUser %>">
+                        <p><%= friend.name %> <%= friend.surname %></p>
+                    </li>
+
+                    <% if(friend.result === null){ %>
+                        <li class = "friend_list">
+                            <input type = "hidden" name = "idQuestion" value = "<%= question.idQuestion %>">
+                            <input type = "hidden" name = "idUser" value = "<%= friend.idUser %>">
+                            <a class = "link_button" href = "">Adivinar</a>
+                        </li>
+  
+                    <%} else if(friend.result === 0){ %>
+                        <li class = "friend_list">
+                            <label class="grafito ask_label red" for="txt_email">Has Fallado</label>
+                        </li>
+                    <%}else {%>
+                    
+                        <li class = "friend_list">
+                            <label class="grafito ask_label green" for="txt_email">Has Acertado</label>
+                        </li>
+                    <% } %>
+
+            </div>
+
+            <% }); %>
+
+        </ul>
+
+    </div>
+    
+</body>
+
+</html>

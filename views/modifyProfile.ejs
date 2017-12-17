@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+    
+    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Modificar Perfil - <%= user.name %></title>
+    
+    <link rel="stylesheet" href="css/Facebluff.css">
+    
+</head>
+
+<body>
+    
+    <%- include("header_user")%>
+    <%- include("navigation")%>
+  
+    <p class = "title_pag grafito">Modificar Perfil</p>
+
+    <%- include("flash")%>
+    
+    <form id="registry_form" action = "/modifyProfile" method = "POST">
+
+        <fieldset id = "first_fieldset" class="grafito">
+
+            <div class="grid_reg">
+                <label class="grafito standar_label" for="txt_nombre">Nombre:</label>
+
+                <div>
+                    <input class="standar_reg" type="text" name="name" id="txt_nombre" value="<%= user.name %>">
+
+                    <% if (err.name) { %>
+                            <label class="red err_label"><%= err.name.msg %></label>
+                    <% } %>
+                </div>
+
+            </div>
+
+             <div class="grid_reg">
+                <label class="grafito standar_label" for="txt_nombre">Apellidos:</label>
+
+                <div>
+                    <input class="standar_reg" type="text" name="surname" id="txt_nombre" value="<%= user.surname %>">
+
+                    <% if (err.surname) { %>
+                            <label class="red err_label"><%= err.surname.msg %></label>
+                    <% } %>
+                </div>
+
+            </div>
+
+            
+            <div class = "bottom_div">
+
+                <label class="grafito standar_label" for="txt_sexo">Sexo:</label>
+
+                <% if(user.name !== 0){ %>
+                    <input class = "sex_radio" type="radio" name="gender" value = "0" checked> Hombre </input>
+                    <input class = "sex_radio" type="radio" name="gender" value= "1"> Mujer </input>
+                <% }else { %>
+                    <input class = "sex_radio" type="radio" name="gender" value = "0"> Hombre </input>
+                    <input class = "sex_radio" type="radio" name="gender" value= "1" checked> Mujer </input>
+                <% } %>
+
+            </div>
+
+            <div class = "bottom_div">
+
+                <label class="grafito standar_label" for="txt_fecha">Fecha Nacimiento:</label>
+                
+                <div>
+                        <input type="date" name="date" id="txt_fecha" value="<%= user.date %>">
+
+                        <% if (err.date) { %>
+                                <label class="red err_label"><%= err.date.msg %></label>
+                        <% } %>
+                    </div>
+
+            </div>
+
+            <label for="inputImagen" class = "standar_label">Imagen de perfil:</label>
+            <input type="file" name="img" id="inputImagen" class = "img_select">
+
+
+            <div class="grid_reg margin_top">
+
+                <label class="grafito standar_label" for="txt_contraseña">Contraseña:</label>
+
+                <div>
+                    <input class="standar_reg" type="password" name="password" id="txt_contraseña" value="<%= user.password %>">
+
+                    <% if (err.password) { %>
+                            <label class="red err_label"><%= err.password.msg %></label>
+                    <% } %>
+                </div>
+
+            </div>
+
+        </fieldset>
+
+        <div class = "button_div">
+            <input class = "small_button scale" action = "/modifyProfile" type = submit value="Modificar">
+        </div>
+
+    </form>
+
+</body>
+
+</html>
