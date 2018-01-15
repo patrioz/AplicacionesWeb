@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+    
+    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Mis Amigos - Facebluff</title>
+    
+    <link rel="stylesheet" href="css/Facebluff.css">
+    
+</head>
+
+<body>
+    
+    <%- include("header_user")%>
+    <%- include("navigation")%>
+
+    <%- include("flash") %>
+
+    <p class = "title_pag grafito">Solicitudes de amistad</p>
+    
+    <% if(requestFriends !== null){ %>
+            <ul class = "friend_ul">
+                <% requestFriends.forEach(reFriend => { %>
+                    <div class = "friend_request_div">
+
+                        <li class = "friend_list">
+                            <img class = "imgAmigo" src = "/imagen/<%= reFriend.idUser %>">
+                            <a class = "normal_text" href = "/profile/<%= reFriend.idUser %>"><%= reFriend.name %> <%= reFriend.surname %></a>
+                        </li> 
+
+                        <li class = "friend_list">
+                            <a class = "link_button" href = "/acceptFriend/<%= reFriend.idUser %>">Aceptar</a>
+                            <a class = "link_button" href = "/refuseFriend/<%= reFriend.idUser %>">Rechazar</a>
+                        </li>    
+                    </div>
+                <% }) %>
+            </ul>
+    <% } %>
+    
+
+    <p class = "title_pag grafito">Búsqueda de amigos</p>
+
+    <form id = "search_form" method = "POST" action = "/search">
+        <label id = "labelSearch" for="search">Buscar por nombre:</label>    
+        <input type="text" name="nombre_campo" placeholder ="Introduce un nombre" id = "search">
+        <input action = "/search" class = "friend_button" type = "submit" value="Buscar">
+    </form>
+
+   
+   <p class = "title_pag grafito">Mis amigos</p>
+      
+    <% if(friends !== null){ %>
+        <ul class = "friend_ul">
+            <% friends.forEach(friend => { %>
+                <li class = "friend_list">
+                    <img class = "imgAmigo" src = "/imagen/<%= friend.idUser %>">
+                    <a class = "normal_text" href = "/profile/<%= friend.idUser %>"><%= friend.name %> <%= friend.surname %></a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+   
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil - <%=user.name%> <%=user.surname%></title>
+  <link rel="stylesheet" href="/css/Facebluff.css">
+</head>
+
+<body>
+    
+    <%- include("header_user")%>
+    <%- include("navigation")%>
+  
+    <p class = "title_pag grafito">Perfil</p>
+
+    <div id = "user">
+
+        <div>
+            <img class = "perfilImg" src = "/imagen/<%= user.idUser %>">
+        </div>
+
+        <ul class = "nostyle_ul" id = "perfil_ul">
+            <li class = "perfil_list" id = "nombreUsuario"><%= user.name %> <%= user.surname %></li>
+            <li class = "perfil_list"><%=age%> años</li>
+
+            <%if(user.gender === 0){%>
+                <li class = "perfil_list">Hombre</li>
+            <%}else{%>
+                <li class = "perfil_list">Mujer</li>
+            <%}%>
+            <li class = "perfil_list"><%= user.score %> puntos</li>
+        </ul>
+        
+    </div>
+
+    <%if(button){%>
+        <div class = "button_div">
+            <a class = "link_button scale" href = "/modifyProfile.html">Modificar Perfil</a>
+        </div>
+     <%}%>
+
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda de amigos</title>
+    <link rel="stylesheet" href="css/Facebluff.css">
+</head>
+
+<body>
+
+    <%- include("header_user")%>
+    <%- include("navigation")%>>
+
+    </nav>
+
+    <p class="title_pag grafito"><%= infMsg %></p>
+
+    <% if(listSearch !== null){ %>
+            <ul class="friend_ul">
+                <% listSearch.forEach(search => { %>
+                    <div class="friend_request_div">
+                        <li class="friend_list">
+                            <img class="imgAmigo" src = "/imagen/<%= search.idUser %>">
+                            <input name = "idUser2" type = "hidden" value = "<%= search.idUser %>">
+                            <a class = "normal_text" href = "/profileFriend/<%= search.idUser %>"><%= search.name %> <%= search.surname %></a>
+                        </li>
+                        <li class="friend_list">
+                            <a href = "/request_friendship/<%= search.idUser %>" class="link_button">Solicitar amistad</a>
+                        </li>
+                    </div>
+                <% }) %>
+            </ul>
+    <% } %>
+
+</body>
+
+</html>

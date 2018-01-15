@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+   
+    <title>Preguntas</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/Facebluff.css">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    
+</head>
+
+<body>
+    <%- include("header_user")%>
+    <%- include("navigation")%>
+    
+    <%- include("flash")%>
+
+    <p class = "title_pag grafito">Preguntas seleccionadas aleatoriamente</p>
+    
+    <ul class = "nostyle_ul">
+
+        <% if(questions !== null) {%>
+            <% questions.forEach(question => { %>
+                <li class = "questions_list"> 
+                    <div class = "grid_ul">
+                        <input type = "hidden" value = "<%= question.idQuestion %>">
+                        <a href = "/askQuestion/<%= question.idQuestion %>" class = "big_link_button scale"><%= question.questionText %></a>
+                    </div>
+                </li> 
+            <% }) %>
+        <% } %>
+    </ul>
+    
+
+    <p class = "title_pag grafito">¡Añade tus preguntas!</p>
+    
+    <div class = "button_div">
+        <a href = "/createQuestion.html" class = "link_button scale">Crear pregunta</a>
+    </div>
+
+
+</body>
+
+</html>

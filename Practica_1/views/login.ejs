@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Bienvenido - Facebluff</title>
+    <meta charset="utf-8">    
+    <link rel="stylesheet" href="css/Facebluff.css">
+</head>
+
+<body>
+        
+    <%- include("header_login")%>
+   
+    <p class = "title_pag grafito">Iniciar Sesión</p>
+
+    <%- include("flash")%>
+    
+    <form action = "/connect" method = "POST">
+        
+       <div id = "iden_fields_div">
+            <input class = "iden_fields" name = "email" id = "email" type = email placeholder = "Email" autofocus required>
+            <input class = "iden_fields" name = "password" id = "password" type = password placeholder  = "Constraseña" required>
+        </div>
+
+         <div class = "button_div">
+            <input class = "small_button scale" type = submit value = "Conectar" action = "/connect">
+        </div>
+            
+    </form>
+    
+</body>
+
+</html>
