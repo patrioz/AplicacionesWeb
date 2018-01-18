@@ -11,7 +11,8 @@
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
-
+    
+     <!-- SCRIPTS JAVASCRIPT & BOOTSTRAP -->
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 
@@ -20,14 +21,22 @@
 
 <body>
 
+
     <div class="container-fluid">
 
         <!-- PANEL SUPERIOR -->
 
-        <div class="row tittle padding-top-20">
-            <h3 class="style_tittle padding-left-20">Juego del mentiroso</h3>
-        </div>
+        <div class="row tittle space-between">
 
+            <h3 class="style_tittle padding-left-20 padding-top-20">Juego del mentiroso</h3>
+
+            <div class="tittle_action display_flex action-tittle" id="action-tittle">
+                <p class="user-tittle">Nombre de usuario</p>
+                <button type="button" class="btn btn-danger">Desconectar</button>
+            </div>
+            
+        </div>
+        
         <div class="row color-grey">
             <div class="col margin-left-30">
                 <h6 class="welcome_tittle display-4 space-between">¡Bienvenido!</h6>
@@ -37,8 +46,7 @@
                 <img src="img/ImagenPortada.jpg" class="img-fluid">
             </div>
         </div>
-
-
+        
         <form class="form">
 
             <fieldset class="padding-30 bg-dark text-white rounded">
@@ -61,9 +69,381 @@
             </fieldset>
         </form>
 
+
+        <!-- PESTAÑAS DE NAVEGACION -->
+        <!--
+            - href: indica la direccion de destino. Esta relacionado con el id de la seccion de abajo.
+            - aria-selected: indica si se encuentra en esa pestala actualmente (true -> sí / false -> no)
+            - aria-controls: 
+        -->
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
+                <!-- SIMULACION 1 -->
+                <a class="nav-item nav-link active" id="nav-s1-tab" data-toggle="tab" href="#nav-s1" role="tab" aria-controls="nav-s1" aria-selected="true">Simulacion 1</a>
+
+                <!-- SIMULACION 2 -->
+                <a class="nav-item nav-link" id="nav-s2-tab" data-toggle="tab" href="#nav-s2" role="tab" aria-controls="nav-s2" aria-selected="false">Simulacion 2</a>
+
+                <!-- SIMULACION 3 -->
+                <a class="nav-item nav-link" id="nav-s3-tab" data-toggle="tab" href="#nav-s3" role="tab" aria-controls="nav-s3" aria-selected="false">Simulacion 3</a>
+
+                <!-- SIMULACION 4 -->
+                <a class="nav-item nav-link" id="nav-s4-tab" data-toggle="tab" href="#nav-s4" role="tab" aria-controls="nav-s4" aria-selected="false">Simulacion 4</a>
+
+            </div>
+        </nav>
+
+
+        <div class="tab-content" id="nav-tabContent">
+
+            <!-- SIMULACION 1 -->
+
+            <div class="tab-pane fade show active" id="nav-s1" role="tabpanel" aria-labelledby="nav-s1-tab">
+
+                <div class="row- row-xl-6">
+
+                    <form class="form">
+                        <fieldset class="padding-30 bg-dark text-white rounded">
+
+                            <label class="label">Crear una nueva partida</label>
+
+                            <div class="form-row align-items-center">
+                                <div class="col-sm-10">
+                                    <label class="sr-only" for="inlineFormInputName">Name</label>
+                                    <input type="text" class="form-control" id="inlineFormInputName" placeholder="Introdouce aqui el nombre">
+                                </div>
+
+                                <div class="col my-1">
+                                    <button type="submit" class="btn btn-primary width-100">Crear</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div class="row-">
+
+                    <form class="form">
+                        <fieldset class="padding-30 bg-dark text-white rounded">
+
+                            <label class="label">Unirse a una partida existente</label>
+
+                            <div class="form-row align-items-center">
+                                <div class="col-sm-10">
+                                    <label class="sr-only" for="inlineFormInputName">Name</label>
+                                    <input type="text" class="form-control" id="inlineFormInputName" placeholder="Introduce aqui el identificador de la partida">
+                                </div>
+
+                                <div class="col-auto my-1">
+                                    <button type="submit" class="boton btn btn-primary">Unirse</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+            </div>
+
+
+            <!-- SIMULACION 2 -->
+
+            <div class="tab-pane fade" id="nav-s2" role="tabpanel" aria-labelledby="nav-s2-tab">
+
+                <div class="row justify-content-between">
+
+                    <div class="col">
+
+                        <div class="row">
+                            <div class="col bg-dark text-white rounded padding-30 margin-left-50">
+                                <div class="row justify-content-between">
+
+                                    <div class="col-">
+                                        <label class=big_bold>Partida amiguetes</label>
+                                    </div>
+
+                                    <div class="col-">
+                                        <button type="button" class="btn btn-primary">Actualizar Partida</button>
+                                    </div>
+                                </div>
+
+                                <div class="row padding-top-30">
+                                    <p>La partida aun no tiene cuatro juegadores.<br> El identificador de esta partida es x.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-5 col-xl-3">
+
+                        <ul class="list-group margin-right-50">
+
+                            <li class="list-group-item bg-dark text-white bold">Jugadores</li>
+
+                            <li class="list-group-item">
+                                <table class=" table">
+                                    <tbody>
+                                        <tr class="mini_bold">
+                                            <td>Nombres</td>
+                                            <td>Nº cartas</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 1</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 2</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 3</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- SIMULACION 3 -->
+
+            <div class="tab-pane fade" id="nav-s3" role="tabpanel" aria-labelledby="nav-s3-tab">
+
+                <div class="row justify-content-between">
+
+                    <div class="col">
+
+                        <div class="row margin-left-50">
+                            <div class="col bg-dark text-white rounded padding-30 ">
+                                <div class="row justify-content-between">
+
+                                    <div class="col-">
+                                        <label class=big_bold>Partida amiguetes</label>
+                                    </div>
+
+                                    <div class="col-">
+                                        <button type="button" class="btn btn-primary">Actualizar Partida</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div clas="row">
+
+                            <ul class="list-group margin-left-50">
+                                <li class="list-group-item bg-dark text-white bold">Cartas en la mesa</li>
+
+                                <li class="list-group-item">
+
+                                    <div class="margin-top-20">
+                                        <span class="border">5</span>
+                                        <span class="border">5</span>
+                                        <span class="border">5</span>
+                                        <span class="border">5</span>
+                                    </div>
+
+                                    <div class="margin-top-40">
+                                        <p><span class="bold">Juagdor actual</span> ha colocado 'x' cartas sobre la mesa</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div clas="row">
+                            <ul class="list-group margin-left-50">
+                                <li class="list-group-item bg-dark text-white bold">Tus cartas</li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                        </div>
+                                    </div>
+                                    <p class="margin-top-40 bold">Aun no es tu turno</p>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-5 col-xl-3">
+
+                        <ul class="list-group margin-right-50">
+
+                            <li class="list-group-item bg-dark text-white bold">Jugadores</li>
+
+                            <li class="list-group-item">
+                                <table class=" table">
+                                    <tbody>
+                                        <tr class="mini_bold">
+                                            <td>Nombres</td>
+                                            <td>Nº cartas</td>
+                                        </tr>
+
+                                        <tr class="bg-primary text-white">
+                                            <td>Jugador 1</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 2</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 3</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <!-- SIMULACION 4 -->
+
+            <div class="tab-pane fade" id="nav-s4" role="tabpanel" aria-labelledby="nav-s4-tab">
+
+                <div class="row justify-content-between">
+
+                    <div class="col">
+
+                        <div class="row margin-left-50">
+                            <div class="col bg-dark text-white rounded padding-30 ">
+                                <div class="row justify-content-between">
+
+                                    <div class="col-">
+                                        <label class=big_bold>Partida amiguetes</label>
+                                    </div>
+
+                                    <div class="col-">
+                                        <button type="button" class="btn btn-primary">Actualizar Partida</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div clas="row">
+
+                            <ul class="list-group margin-left-50">
+                                <li class="list-group-item bg-dark text-white bold">Cartas en la mesa</li>
+
+                                <li class="list-group-item">
+
+                                    <div class="margin-top-20">
+                                        <span class="border">5</span>
+                                        <span class="border">5</span>
+                                        <span class="border">5</span>
+                                        <span class="border">5</span>
+                                    </div>
+
+                                    <div class="margin-top-40">
+                                        <p><span class="bold">Juagdor actual</span> ha colocado 'x' cartas sobre la mesa</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div clas="row">
+                            <ul class="list-group margin-left-50">
+                                <li class="list-group-item bg-dark text-white bold">Tus cartas</li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                            <img src="img/10_C.png" class="img-fluid img" alt="Responsive image">
+                                        </div>
+                                    </div>
+
+                                    <div class="margin-top-40">
+
+                                        <button type="button" class="btn btn-primary btn-lg">Jugar cartas seleccionadas</button>
+                                        <button type="button" class="btn btn-danger btn-lg">¡Mentiroso!</button>
+
+                                    </div>
+
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-5 col-xl-3">
+
+                        <ul class="list-group margin-right-50">
+
+                            <li class="list-group-item bg-dark text-white bold">Jugadores</li>
+
+                            <li class="list-group-item">
+                                <table class=" table">
+                                    <tbody>
+                                        <tr class="mini_bold">
+                                            <td>Nombres</td>
+                                            <td>Nº cartas</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 1</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Jugador 2</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+
+                                        <tr class="bg-primary text-white">
+                                            <td>Jugador 3</td>
+                                            <td class="mini_bold">--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
 
+
+    <!-- SCRIPTS JAVASCRIPT & BOOTSTRAP -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    
 </body>
 
-
 </html>
+
