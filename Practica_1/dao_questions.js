@@ -111,6 +111,40 @@ class DAOQuestions {
 
 
     /**
+     * Dadas una respuesta alternativa la asocia a la pregunta en la base de datos.
+     * 
+     * @param {object} answers respuesta alternativa
+     * @param {function} callback Función que recibirá el objeto error y el resultado
+     */
+    addAlternativeAnswer(idQuestion, answers, callback){
+
+        this.pool.getConnection((err, connection) => {
+            
+            if (err){
+                callback(err); return;
+            }
+
+            let query= "INSERT INTO answers (idQuestion, answerText) VALUES ?";
+
+            let insert = [];
+
+            insert.push([idQuestion, answers]);
+
+            connection.query(query,
+            [insert],
+            (err, result) => {
+                
+                    if(err){
+                        callback(err); return;
+                    }
+                    connection.release();
+                    callback(null, result.insertId);
+            });
+        });
+    }//createQuestion
+
+
+    /**
      * Dado los parametros de entrada alamacena en la base de datos
      * una respuesta para una determinada pregunta contestada por el usuario actual 
      * 
@@ -217,6 +251,8 @@ class DAOQuestions {
      * Dado un identificador de pregunta y de usuario consulta si se ha respondido o no
      * 
      * @param {*} idQuestion id de la pregunta la cual se quiere obtener las respuestas 
+     * @param {int} userId id del usario actual
+     * @param {function} callback 
      */
     findAnswer(idQuestion, idUser, callback){
 
@@ -247,38 +283,208 @@ class DAOQuestions {
 
 
     /**
-     * Devuelve la lista de amigos que han constestado a la pregunta elegida y en qu estado se encuetra.
+     * Devuelve la lista de amigos que han constestado a la pregunta elegida y
+     * aun no ha sido adib¡vinada por el usuario actual
      * 
-     * @param {int} idQuestion 
-     * @param {int} userId 
+     * @param {int} idQuestion id de la pregunta la cual se quiere obtener las respuestas 
+     * @param {int} isUser id del usario actual
      * @param {function} callback 
      */
-    answerCorrect(idQuestion, userId, callback){
+    friendsNotAnswer(idUser, idQuestion, callback){
 
         this.pool.getConnection((err, connection) => {
             
-        if (err){
-            callback(err); return;
-        }
-  
-        
-        connection.query("SELECT users.idUser, users.name, answers_friends.answer as result "+
-                        "FROM users JOIN friendship ON (users.idUser = friendship.user2) "+
-                        "LEFT JOIN answers_self ON (friendship.user2 = answers_self.user AND answers_self.question = ? ) "+
-                        "LEFT JOIN answers_friends ON (answers_friends.userFriend = answers_self.user "+
-                        "AND answers_friends.question = answers_self.question) "+
-                        "WHERE friendship.user1 = ?",
-        [idQuestion, userId],
-        (err,rows)=>{
-
-            if(err){
+            if (err){
                 callback(err); return;
             }
-            else
+
+            connection.query("SELECT f.user2 AS idFriend, u.name AS nameFriend, u.surname AS surnameFriend " +
+                            "FROM users u JOIN friendship f ON (f.user2 = u.idUser) " +
+                            "WHERE user1 = ? " +
+                            "AND f.user2 NOT IN " +
+                            "(SELECT friendship.user2 FROM answers_friends af JOIN friendship " +
+                            " WHERE f.user2= friendship.user2 AND friendship.user2 = af.userFriend and af.question = ?) " +
+                            "UNION " +
+                            "SELECT f.user1 AS idFriend, u.name AS nameFriend, u.surname AS surnameFriend " +
+                            "FROM users u JOIN friendship f ON (f.user1 = u.idUser) " +
+                            "WHERE user2 = ? " +
+                            "AND f.user1 NOT IN " +
+                            "(SELECT friendship.user1 FROM answers_friends af JOIN friendship " +
+                            "WHERE f.user1= friendship.user1 AND friendship.user1 = af.userFriend and af.question = ?)",
+            [idUser, idQuestion, idUser, idQuestion],
+            (err,rows)=>{
+
+                if(err){
+                    callback(err); return;
+                }
+
+                connection.release();
                 callback(null, rows);
+            });
         });
-    });
-    }//answerCorrect
+    }//friendsNotAnswer
+
+
+    /**
+     * Devuelve la lista de amigos que han constestado a la pregunta elegida y
+     * que ademas ya han sido adivinadas por el usuario actual.
+     * 
+     * @param {int} idQuestion id de la pregunta la cual se quiere obtener las respuestas 
+     * @param {int} isUser id del usario actual
+     * @param {function} callback 
+     */
+    friendsAnswer(idUser, idQuestion, callback){
+
+        this.pool.getConnection((err, connection) => {
+            
+            if (err){
+                callback(err); return;
+            }
+
+            connection.query("SELECT u.idUser AS idFriend, u.name AS nameFriend, " +
+                            "u.surname AS surnameFriend, af.answer AS result " + 
+                            "FROM answers_friends af JOIN users u ON (u.idUser = af.userFriend) " +
+                            "WHERE af.userMe = ? AND af.question = ?",
+            [idUser, idQuestion],
+            (err,rows)=>{
+                
+                
+
+                if(err){
+                    callback(err); return;
+                }
+
+                    connection.release();
+                    callback(null, rows);
+            });
+        });
+    }//friendsAnswer
+
+
+    /**
+     * Devuelve una lista de respuestas aleatorias entre las que se encuentra
+     * la elegida por el amigo por el cual vamos a adivinar.
+     * 
+     * @param {int} idQuestion id de la pregunta la cual se quiere obtener las respuestas 
+     * @param {int} idFriend id_amigo del cual queremos obtener las respuestas
+     * @param {int} cont contador para saber el numero de repuestas que necesitamos.
+     * @param {function} callback 
+     */
+    randAnswerWithCorrect(idQuestion, idFriend, cont, callback){
+
+        cont = cont - 1;
+
+        this.pool.getConnection((err, connection) => {
+            
+            if (err){
+                callback(err); return;
+            }
+
+            connection.query("SELECT idQuestion, questionText, idAnswer, answerText, 1 as correct " + 
+                            "FROM questions NATURAL JOIN answers " +
+                            "WHERE idQuestion = ? AND idAnswer = " +
+                            "(SELECT answer FROM answers_self WHERE question = ? AND user = ?) " +
+                            "UNION " +
+                            "(SELECT idQuestion, questionText, idAnswer, answerText, 0 as correct " +
+                            "FROM questions NATURAL JOIN answers " +
+                            "WHERE idQuestion = ? AND idAnswer NOT IN " +
+                            "(SELECT answer FROM answers_self WHERE question = ? AND user = ?) " +
+                            "ORDER BY rand() LIMIT ?) " + 
+                            "ORDER BY idAnswer",
+            [idQuestion, idQuestion, idFriend, idQuestion, idQuestion, idFriend, cont],
+            (err,rows)=>{
+
+                
+
+                if(err){
+                    callback(err); return;
+                }
+
+                connection.release();
+                callback(null, rows);
+            });
+        });
+    }//randAnswerWithCorrect
+
+
+     /**
+     * Devuelve el contador de respuestas de una pregunta.
+     * 
+     * @param {int} idQuestion id de la pregunta la cual se quiere obtener las respuestas 
+     * @param {function} callback 
+     */
+    getContQuestion(idQuestion, callback){
+
+        this.pool.getConnection((err, connection) => {
+            
+            if (err){
+                callback(err); return;
+            }
+
+            connection.query("SELECT cont FROM `questions` WHERE idQuestion = ?",
+            [idQuestion],
+            (err,rows)=>{
+
+                if(err){
+                    callback(err); return;
+                }
+                connection.release();
+                callback(null, rows[0].cont);
+            });
+        });
+    }//getContQuestion
+
+
+    checkAnswer(idQuestion, idFriend, idAnswer, callback){
+
+        this.pool.getConnection((err, connection) => {
+            
+            if (err){
+                callback(err); return;
+            }
+
+            connection.query("SELECT * FROM `answers_self` WHERE question = ? AND answer = ? AND user = ?",
+            [idQuestion, idAnswer, idFriend],
+            (err,result)=>{
+
+                if(err){
+                    callback(err); return;
+                }
+                else{
+
+                    connection.release();
+
+                    if(result.length === 0)
+                        callback(null, false);
+                    else
+                        callback(null, true);
+                }//else
+            });
+        });
+    }//checkAnswer
+
+    createAnswerFriend(idQuestion, idUser, idFriend, result, callback){
+
+        this.pool.getConnection((err, connection) => {
+            
+            if (err){
+                callback(err); return;
+            }
+
+            connection.query("INSERT INTO answers_friends (question, userMe, userFriend, answer) VALUES (?, ?, ?, ?)",
+            [idQuestion, idUser, idFriend, result],
+            (err,result)=>{
+
+                if(err){
+
+                    callback(err); return;
+                }
+
+                connection.release();
+                callback(null, result.insertId);
+            });
+        });
+    }//createAnswerFriend
 
 }//DAOAnswers
 

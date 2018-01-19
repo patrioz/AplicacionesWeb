@@ -28,7 +28,7 @@
 
                         <li class = "friend_list">
                             <img class = "imgAmigo" src = "/imagen/<%= reFriend.idUser %>">
-                            <a class = "normal_text" href = "/profileFriend/<%= reFriend.idUser %>"><%= reFriend.name %> <%= reFriend.surname %></a>
+                            <a class = "normal_text" href = "/profile/<%= reFriend.idUser %>"><%= reFriend.name %> <%= reFriend.surname %></a>
                         </li> 
 
                         <li class = "friend_list">
@@ -57,7 +57,7 @@
             <% friends.forEach(friend => { %>
                 <li class = "friend_list">
                     <img class = "imgAmigo" src = "/imagen/<%= friend.idUser %>">
-                    <a class = "normal_text" href = "/profileFriend/<%= friend.idUser %>"><%= friend.name %> <%= friend.surname %></a>
+                    <a class = "normal_text" href = "/profile/<%= friend.idUser %>"><%= friend.name %> <%= friend.surname %></a>
                 </li>
             <% }) %>
         </ul>

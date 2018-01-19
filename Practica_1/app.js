@@ -241,8 +241,8 @@ app.get("/imagen/:id", (request, response) => {
             response.end(imagen);
         }
         else {
-            response.status(404);
-            response.end();
+
+            response.end(response.sendFile(__dirname + "/public/img/noPerfil.png"));
         }
     });
 });
@@ -307,7 +307,31 @@ app.get("/profile", userId, (request, response) =>{
             response.locals.scoreUser = user_fields.score;
             response.locals.idUser= request.session.idUser;
             let age = getAge(user_fields.date);
-            response.render("profile", {user:user_fields, age});
+            response.render("profile", {user:user_fields, age, button:true});
+        }
+    });
+});
+
+
+
+/**
+ * Manejador que muestra la informacion del perfil que se ha seleccionado
+ */
+app.get("/profile/:id", userId, (request, response) => {
+
+    response.locals.scoreUser = request.session.scoreUser;
+    response.locals.idUser= request.session.idUser;
+
+    daoU.readUser(request.params.id, (err, user_fields) =>{
+        
+        if(err){
+            response.status(400);
+            response.end();
+        }
+        else{
+            response.status(200);
+            let age = getAge(user_fields.date);
+            response.render("profile", {user:user_fields, age, button:true});
         }
     });
 });
@@ -341,7 +365,7 @@ app.get("/modifyProfile.html", userId, (request, response) =>{
  * (si tiene exito --> vuelve a la vista de perfil con los datos actualizados)
  * (si no --> vuelve a mostrar los datos en el formualario para vovler a modificar)
  */
-app.post("/modifyProfile", userMail, userId, (request, response) =>{
+app.post("/modifyProfile", upload.single("foto"), userMail, userId, (request, response) =>{
 
     response.locals.scoreUser = request.session.scoreUser;
     response.locals.idUser= request.session.idUser;
@@ -357,7 +381,8 @@ app.post("/modifyProfile", userMail, userId, (request, response) =>{
 
             let user = request.body;
             user.email = request.session.emailUser;
-            
+            user.img = null;
+
             if (request.file) {
                 user.img = request.file.buffer;
             }
@@ -448,27 +473,6 @@ app.get("/friends", userId, deleteFriends, (request, response) =>{
                     response.render("friends", {friends:friends, requestFriends:requestFriends});
                 }
             });
-        }
-    });
-});
-
-/**
- * Manejador que muestra la informacion del perfil que se ha seleccionado
- */
-app.get("/profileFriend/:id", userId, (request, response) => {
-
-    response.locals.scoreUser = request.session.scoreUser;
-    response.locals.idUser= request.session.idUser;
-
-    daoU.readUser(request.params.id, (err, friend_fields) =>{
-        
-        if(err){
-            response.status(400);
-            response.end();
-        }
-        else{
-            response.status(200);
-            response.render("profileFriend", {user:friend_fields});
         }
     });
 });
@@ -751,8 +755,6 @@ app.post("/createQuestion", (request, response) => {
  */
 app.get("/askQuestion/:idQuestion",userId, (request, response) => {
 
-    //FALTARAN FUNCIONALIDADES O ACCESOS AL DAO PARA LA PARTE 3 DE LA PRACTICA
-    //EN LA QUE LOS AMIGOS INTERVENDRÁN EN LA INTERACCION DE LA PREGUNTA.
     let idUser = request.session.idUser;
     let idQuestion = request.params.idQuestion;
     response.locals.scoreUser = request.session.scoreUser;
@@ -771,6 +773,8 @@ app.get("/askQuestion/:idQuestion",userId, (request, response) => {
                 response.redirect("/questions.html");
             }
             else{
+                //Nos indica si nosotros mismos hemos respondido a la pregunta
+                //en caso de ser correcto, result = true y ocultaria la ppregunta cuando rendericemos.
                 daoQ.findAnswer(idQuestion, idUser, (err,result) =>{
                     
                     if(err){
@@ -779,19 +783,32 @@ app.get("/askQuestion/:idQuestion",userId, (request, response) => {
                     }//if
                     else{
 
-                        daoQ.answerCorrect(idQuestion, idUser, (err,list_friends) =>{
+                        //obtenemos lista de amigos a los que hemos adividanado la pregunta.
+                        daoQ.friendsAnswer(idUser, idQuestion, (err, list_friendsAnswer) =>{
 
                             if(err){
                                 response.status(400);
                                 response.end();
                             }//if
                             else{
-                                response.render("askQuestion", {list_friends:list_friends, question:question, show:result})
+
+                                daoQ.friendsNotAnswer(idUser, idQuestion, (err, list_friendsNotAnswer) =>{
+
+                                    if(err){
+                                        response.status(400);
+                                        response.end();
+                                    }//if
+                                    else{
+                                        response.status(200);
+                                        response.render("askQuestion", {list_friendsAnswer:list_friendsAnswer, 
+                                                        list_friendsNotAnswer:list_friendsNotAnswer, question:question, show:result})
+
+                                    }
+                                });
+
                             }
                         });
-                 
                     }//else
-
                 });
             }
         }//else
@@ -822,7 +839,7 @@ app.get("/answerQuestion.html/:id", (request, response) =>{
                 response.redirect("/askQuestion/" + idQuestion)
             }
             else
-                response.render("answerQuestion", {question:result});
+                response.render("answerQuestion", {question:result, idFriend:undefined, gueesFriend:0});
         }
     });
 });
@@ -836,14 +853,13 @@ app.get("/answerQuestion.html/:id", (request, response) =>{
  */
 app.post("/createAnswer", userId, (request, response) =>{
 
-    
     //Si el usuario ha creado una respuesta alternativa, primero hay que insertarla
     //en la base de datos como una repuesta de dihca pregunta.
     if(request.body.alternative_answer){
-        let alternativeAnswer = [];
-        alternativeAnswer.push(request.body.alternative_answer);
 
-        daoQ.addAnswer(request.body.id, alternativeAnswer, (err, idAnswer) =>{
+        let alternativeAnswer = request.body.alternative_answer;
+
+        daoQ.addAlternativeAnswer(request.body.id, alternativeAnswer, (err, idAnswer) =>{
 
             if(err){
                 response.status(400);
@@ -874,7 +890,7 @@ app.post("/createAnswer", userId, (request, response) =>{
                     });
                 }//if
                 else{
-                    response.setFlash("ERROR al crear la respuestas aleatoria");
+                    response.setFlash("ERROR al crear la respuesta aleatoria");
                     response.redirect("/answerQuestion.html/" + idQuestion);
                 }//else
             }//else
@@ -902,6 +918,80 @@ app.post("/createAnswer", userId, (request, response) =>{
             }//else
         });
     }//else
+});
+
+app.get("/guessQuestionFriend/:idFriend/:idQuestion", (request, response) => {
+
+    response.locals.scoreUser = request.session.scoreUser;
+    response.locals.idUser= request.session.idUser;
+
+    let idQuestion = request.params.idQuestion;
+    let idFriend = request.params.idFriend;
+
+    daoQ.getContQuestion(idQuestion, (err, contador) =>{
+
+        if(err){
+            response.status(400);
+            response.end();
+        }//if
+        else{
+
+            response.status(200);
+            daoQ.randAnswerWithCorrect(idQuestion, idFriend, contador, (err, list_answer) => {
+
+                if(err){
+                    response.status(400);
+                    response.end();
+                }//if
+                else{
+                    response.status(200);
+                    response.render("answerQuestion", {question:list_answer, idFriend:idFriend, gueesFriend:1})
+                }//else
+            });
+        }//else
+    });
+});
+
+app.post("/gueesAnswer", userId, (request, response) =>{
+
+    
+    response.locals.idUser= request.session.idUser;
+
+    let idQuestion = request.body.id;
+    let idFriend = request.body.idFriend;
+    let correct;
+    if(request.body.correct === 1)
+        correct = false;
+    else
+        correct = true;
+    let idUser = request.session.idUser;
+
+    let score;
+    score = request.session.scoreUser + 50;
+    request.session.scoreUser = score;
+    response.locals.scoreUser = score;
+
+    daoU.modifyScore(idUser, score, (err, result) => {
+
+        if(err){
+            response.status(400);
+            response.end();
+        }//if
+        else{
+
+            daoQ.createAnswerFriend(idQuestion, idUser, idFriend, correct, (err, id) => {
+
+                if(err){
+                    response.status(400);
+                    response.end();
+                }//if
+                else{
+                    response.status(200);
+                    response.redirect("/askQuestion/" + idQuestion);
+                }//else
+            });
+        }//else
+    });
 });
 
 

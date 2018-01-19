@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- -----------------------------------------------------
 -- Table `practica1_aw`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `practica1_aw`.`users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `idUser` INT(11) NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `practica1_aw`.`users` (
   `date` DATE NOT NULL,
   `gender` TINYINT(4) NOT NULL,
   `score` INT(11) NOT NULL DEFAULT '0',
-  `img` BLOB,
+  `img` LONGBLOB,
   PRIMARY KEY (`idUser`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB
@@ -43,7 +43,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `practica1_aw`.`friends`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `practica1_aw`.`friendship` (
+CREATE TABLE IF NOT EXISTS `friendship` (
   `user1` INT(11) NOT NULL,
   `user2` INT(11) NOT NULL,
   `request` TINYINT(4) NOT NULL DEFAULT '1',
@@ -62,7 +62,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `practica1_aw`.`questions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `practica1_aw`.`questions` (
+CREATE TABLE IF NOT EXISTS `questions` (
   `idQuestion` INT(11) NOT NULL AUTO_INCREMENT,
   `questionText` VARCHAR(45) NOT NULL,
   `cont` INT(11) NOT NULL, -- Para el apartado 3
@@ -73,7 +73,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `practica1_aw`.`answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `practica1_aw`.`answers` (
+CREATE TABLE IF NOT EXISTS `answers` (
   `idAnswer` INT(11) NOT NULL AUTO_INCREMENT,
   `idQuestion` INT(11) NOT NULL,
   `answerText` VARCHAR(45) NOT NULL,
@@ -88,7 +88,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `practica1_aw`.`answers_self`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `practica1_aw`.`answers_self` (
+CREATE TABLE IF NOT EXISTS `answers_self` (
   `question` INT(11) NOT NULL,
   `answer` INT(11) NOT NULL,
   `user` INT(11) NOT NULL,
@@ -116,7 +116,7 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `practica1_aw`.`answers_friends`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `practica1_aw`.`answers_friends` (
+CREATE TABLE IF NOT EXISTS `answers_friends` (
   `question` INT(11) NOT NULL,
   `userMe` INT(11) NOT NULL,
   `userFriend` INT(11) NOT NULL,

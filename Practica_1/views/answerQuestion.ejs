@@ -26,24 +26,33 @@
 
                 <fieldset class = "answer_fieldset">
                     <li>
+                        <% if(gueesFriend === 1){ %>
+                            <input type = "hidden" name = "correct" value = "<%= quest.correct %>">
+                        <% } %>
                         <input type="radio" value = "<%=quest.idAnswer%>" name = "answer"> <%= quest.answerText %>
                     </li>
                 </fieldset>
 
             <% }); %>
 
-        <fieldset class = "answer_fieldset"><li>
-            <input type="radio" name="alternative_answer"> Otra Respuesta
-            <input class = "alternative_answer" type="text" name="alternative_answer" placeholder = "Introduce una respuesta alternativa">
-        </li></fieldset>
-        </ul>
+        <% if(gueesFriend === 0){ %>
+            <fieldset class = "answer_fieldset"><li>
+                <input type="radio" name="alternative_answer"> Otra Respuesta
+                <input class = "alternative_answer" type="text" name="alternative_answer" placeholder = "Introduce una respuesta alternativa">
+            </li></fieldset>
+            </ul>
+        <% } %>
 
         <input type = "hidden" name = "id" value = "<%= question[0].idQuestion %>">
         
         <div class = "button_div">
-            <input action = "/createAnswer" class = "small_button scale" type = "submit" value = "Contestar">
+            <% if(gueesFriend === 1){ %>
+                <input type = "hidden" name = "idFriend" value = "<%= idFriend %>">
+                <input action = "/gueesAnswer" class = "small_button scale" type = "submit" value = "Contestar">
+            <% } else{%>
+                <input action = "/createAnswer" class = "small_button scale" type = "submit" value = "Contestar">
+            <% } %>
         </div>
-
     </form>
 
 </body>

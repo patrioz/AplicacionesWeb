@@ -32,23 +32,32 @@
 
         <ul class = "nostyle_ul">
 
-            <% list_friends.forEach(friend => { %>
+            <% list_friendsNotAnswer.forEach(friend => { %>
 
-             <div class = "friend_request_div">
+                <div class = "friend_request_div">
 
                     <li class = "friend_list">
-                        <img class = "imgAmigo" src = "/imagen/<%= friend.idUser %>">
-                        <p><%= friend.name %> <%= friend.surname %></p>
+                        <img class = "imgAmigo" src = "/imagen/<%= friend.idFriend %>">
+                        <p><%= friend.nameFriend %> <%= friend.surnameFriend %></p>
                     </li>
 
-                    <% if(friend.result === null){ %>
-                        <li class = "friend_list">
-                            <input type = "hidden" name = "idQuestion" value = "<%= question.idQuestion %>">
-                            <input type = "hidden" name = "idUser" value = "<%= friend.idUser %>">
-                            <a class = "link_button" href = "">Adivinar</a>
-                        </li>
+                    <li class = "friend_list">
+                        <a class = "link_button" href = "/guessQuestionFriend/<%= friend.idFriend %>/<%= question.idQuestion%>">Adivinar</a>
+                    </li>
+                </div>
+            <% }); %>
+
+
+            <% list_friendsAnswer.forEach(friend => { %>
+
+                <div class = "friend_request_div">
+
+                    <li class = "friend_list">
+                        <img class = "imgAmigo" src = "/imagen/<%= friend.idFriend %>">
+                        <p><%= friend.nameFriend %> <%= friend.surnameFriend %></p>
+                    </li>
   
-                    <%} else if(friend.result === 0){ %>
+                    <%if(friend.result === 0){ %>
                         <li class = "friend_list">
                             <label class="grafito ask_label red" for="txt_email">Has Fallado</label>
                         </li>
@@ -58,9 +67,7 @@
                             <label class="grafito ask_label green" for="txt_email">Has Acertado</label>
                         </li>
                     <% } %>
-
-            </div>
-
+                </div>
             <% }); %>
 
         </ul>

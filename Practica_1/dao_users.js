@@ -81,7 +81,7 @@ class DAOUsers {
             if(err){
                 callback(err); return;
             }
-            
+
             connection.query("INSERT INTO users (email, password, name, surname, date, gender, img) VALUES (?, ?, ?, ?, ?, ?, ?)",
             [user.email, user.password, user.name, user.surname, user.date, user.gender, user.img],
             (err, result) =>{
@@ -101,7 +101,7 @@ class DAOUsers {
 
 
     /**
-     * Modifica usuarioen la base de datos. 
+     * Modifica usuario en la base de datos. 
      *  (--> primera iteración lo haremos sin imagen de perfil)
      * 
      * Resultado de la operacion:
@@ -119,9 +119,9 @@ class DAOUsers {
             if(err){
                 callback(err); return;
             }
-
-            connection.query("UPDATE users SET password = ?, name = ?, surname = ?, date = ?, gender = ? img = ? WHERE email = ?",
-            [user.password, user.name, user.surname, user.date, user.gender, user.email, user.img],
+            
+            connection.query("UPDATE users SET password = ?, name = ?, surname = ?, date = ?, gender = ?, img = ? WHERE email = ?",
+            [user.password, user.name, user.surname, user.date, user.gender, user.img, user.email],
             (err, result) =>{
 
                 if(err){
@@ -312,10 +312,36 @@ class DAOUsers {
                     callback(null, users);
             });
         });
-    }//findByName  
+    }//findByName 
+
+    modifyScore(idUser, score, callback){
+
+        this.pool.getConnection((err, connection) =>{
+
+            if(err){                         
+                callback(err); return;
+            }
+
+            connection.query("UPDATE users SET score = ? WHERE idUser = ?",
+
+            [score, idUser],
+            (err, result) =>{
+
+                if(err){
+                    console.log(err);
+                    callback(err);return;
+                }
+                connection.release();
+
+                if(result.changedRows === 0)
+                    callback(null, false);
+                else
+                    callback(null, true);
+            });
+        });
+    }
 
 }//DAOUsers
-
 
 module.exports = {
     DAOUsers: DAOUsers
