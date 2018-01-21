@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Juego del mentiroso</title>
+
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">   
+</head>
+
+
+<body>
+
+    <div class="container-fluid">
+
+        <!-- TITULO - NOMBRE USUARIO - BOTON DESCONECTAR -->
+        <div id ="panelSuperior" class="row tittle space-between">
+            <h3 class="style_tittle padding-left-20 padding-top-20">Juego del mentiroso</h3>
+            <div id="action-tittle" class="tittle_action display_flex action-tittle">
+                <!--<p id = "nombre_usuario_titulo" class="user-tittle">Nombre de usuario</p>-->
+                <button id ="desconectar" type="button" class="btn btn-danger">Desconectar</button>
+            </div>
+        </div>
+        
+        <div id = "login">
+
+            <!-- PANEL DE BIENVENIDA -->
+            <div id ="bienvenido" class="row color-grey">
+                <div class="col margin-left-30">
+                    <h6 class="welcome_tittle display-4 space-between">¡Bienvenido!</h6>
+                </div>
+                <div class="col-xl-4 col-md-7 margin-right-30">
+                    <img src="img/ImagenPortada.jpg" class="img-fluid">
+                </div>
+            </div>
+        
+            <!--LOGIN-->    
+            <div id ="log" class="form">
+                <fieldset class="padding-30 bg-dark text-white rounded">
+
+                    <label class="label">Identificarse:</label>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Nombre Usuario</label>
+                        <input id ="usuario" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Introduzca nombre">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Contraseña</label>
+                        <input id ="contraseña" type="password" class="form-control" placeholder="Indtroduzca contraseña">
+                    </div>
+
+                    <button id = "entrar" class="btn btn-primary">Aceptar</button>
+                    <button id ="nuevo" class="btn btn-outline-primary">Nuevo Usuario</button>
+
+                </fieldset>
+            </div>
+        </div>
+
+        
+        <div id = "game">
+
+            <!-- PESTAÑAS DE NAVEGACION -->
+            <!--
+                - href: indica la direccion de destino. Esta relacionado con el id de la seccion de abajo.
+                - aria-selected: indica si se encuentra en esa pestala actualmente (true -> sí / false -> no)
+                - aria-controls: 
+            -->
+            <nav id="menu">
+                <div class="nav nav-tabs" id="listaPartidas" role="tablist">
+                    <a class="nav-item nav-link active" id="misPartidas" data-toggle="tab" href="#nav-s1" role="tab" aria-controls="nav-s1" aria-selected="true">Mis Partidas</a>
+                </div>
+            </nav>
+
+            <!--CONTENEDOR DONDE SE ALOJAN TODAS LAS PESTAÑAS -->
+            <div class="tab-content" id="nav-tabContent">
+
+                <!--ESTE DIV GENERA UNA PESTAÑA, SI SE QUIEREN GENERAR MAS PESTAÑAS, HAY QUE GENERAR UN DIV ASÍ -->
+
+                <!--CONTIENE "PANTALLA DE PARTIDAS DE UN USUARIO" (FUGURA 3) -->
+                <div class="tab-pane fade show active" id="vistaMisPartida" role="tabpanel" aria-labelledby="nav-s1-tab">
+
+                    <div class="row- row-xl-6">
+                        <div class="form">
+                            <fieldset class="padding-30 bg-dark text-white rounded">
+                                <label class="label">Crear una nueva partida</label>
+                                <div class="form-row align-items-center">
+                                    <div class="col-sm-10">
+                                        <label class="sr-only" for="inlineFormInputName">Name</label>
+                                        <input id="nombrePartida" type="text" class="form-control" id="nombre" placeholder="Introdouce aqui el nombre">
+                                    </div>
+                                    <div class="col my-1">
+                                        <button id ="crearPartida" type="submit" class="btn btn-primary width-100">Crear</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row-">
+                        <div class="form">
+                            <fieldset class="padding-30 bg-dark text-white rounded">
+                                <label class="label">Unirse a una partida existente</label>
+                                <div class="form-row align-items-center">
+                                    <div class="col-sm-10">
+                                        <label class="sr-only" for="inlineFormInputName">Name</label>
+                                        <input id ="unirse" type="text" class="form-control" id="partida" placeholder="Introduce aqui el identificador de la partida">
+                                    </div>
+                                    <div class="col-auto my-1">
+                                        <button id ="unirsePartida" type="submit" class="boton btn btn-primary">Unirse</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </div><!-- FINAL DE PESTAÑA -->
+
+
+                <!--CONTIENE "PARITDA A LA ESPERA DE UN JUGADOR" (FIGURA 4) -->
+                <div class="tab-pane fade" id="vistaPartida" role="tabpanel" aria-labelledby="nav-s2-tab">
+
+                    <div class="row justify-content-between">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col bg-dark text-white rounded padding-30 margin-left-50">
+                                    <div class="row justify-content-between">
+                                        <div class="col-">
+                                            <label class=big_bold>Partida amiguetes</label>
+                                        </div>
+                                        <div class="col-">
+                                            <button type="button" class="btn btn-primary">Actualizar Partida</button>
+                                        </div>
+                                    </div>
+                                    <div class="row padding-top-30">
+                                        <p>La partida aun no tiene cuatro juegadores.<br> El identificador de esta partida es x.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 col-xl-3">
+                            <ul class="list-group margin-right-50">
+                                <li class="list-group-item bg-dark text-white bold">Jugadores</li>
+                                <li class="list-group-item">
+                                    <table class=" table">
+                                        <tbody>
+                                            <tr class="mini_bold">
+                                                <td>Nombres</td>
+                                                <td>Nº cartas</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jugador 1</td>
+                                                <td class="mini_bold">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jugador 2</td>
+                                                <td class="mini_bold">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jugador 3</td>
+                                                <td class="mini_bold">--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> <!-- FINAL DE PESTAÑA -->
+
+
+                <!--CONTIENE "PARITDA EN CURSO" (FIGURA 5) -->
+                <div class="tab-pane fade" id="nav-s2" role="tabpanel" aria-labelledby="nav-s2-tab">
+
+                    <div class="row justify-content-between">
+
+                        <div class="col">
+                            <div class="row">
+                                <div class="col bg-dark text-white rounded padding-30 margin-left-50">
+                                    <div class="row justify-content-between">
+                                        <div class="col-">
+                                            <label class=big_bold>Partida amiguetes</label>
+                                        </div>
+                                        <div class="col-">
+                                            <button type="button" class="btn btn-primary">Actualizar Partida</button>
+                                        </div>
+                                    </div>
+                                    <div class="row padding-top-30">
+                                        <p>La partida aun no tiene cuatro juegadores.<br> El identificador de esta partida es x.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 col-xl-3">
+
+                            <ul class="list-group margin-right-50">
+                                <li class="list-group-item bg-dark text-white bold">Jugadores</li>
+                                <li class="list-group-item">
+                                    <table class=" table">
+                                        <tbody>
+                                            <tr class="mini_bold">
+                                                <td>Nombres</td>
+                                                <td>Nº cartas</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jugador 1</td>
+                                                <td class="mini_bold">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jugador 2</td>
+                                                <td class="mini_bold">--</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jugador 3</td>
+                                                <td class="mini_bold">--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div><!-- FINAL DE PESTAÑA -->
+                
+
+            </div> <!--FINAL DE CONTENEDOR DONDE SE ALOJAN TODAS LAS PESTAÑAS-->
+
+        </div> <!--FINAL DEL CONTENEDOR QUE ALOJA EL ID: GAME-->
+        
+    </div> <!-- CONTAINER FLUID --> 
+    
+    
+</body>
+
+<!-- SCRIPTS JAVASCRIPT & BOOTSTRAP -->
+
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+
+</html>
+
