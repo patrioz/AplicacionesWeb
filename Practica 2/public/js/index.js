@@ -2,6 +2,7 @@
 
 //***  VARIABLES GLOBALES  *** */
  let usuario;
+ let idUsuario;
  let cadena;
 
  $(document).ready(() =>{
@@ -268,7 +269,7 @@ function actualizar_partida(event){
     
             error: function (jqXHR, textStatus, errorThrown) {
                 alert("Se ha producido un error: " + errorThrown);
-                cerrar_sesion();
+                //cerrar_sesion();
             }
         });
     }//if
@@ -277,7 +278,7 @@ function actualizar_partida(event){
 
 
 function cerrar_sesion(){
-
+  
     cadena = undefined;
     usuario = undefined;
     $("#nombre_usuario_titulo").val("");
@@ -287,4 +288,5 @@ function cerrar_sesion(){
     $("#action-tittle").hide();
     $("#login").show();
     
-}//cerrar_desion
+    
+}//cerrar_sesion
